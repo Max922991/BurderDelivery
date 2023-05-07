@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/ingredients")
 @RequiredArgsConstructor
 public class IngredientController {
     private final IngredientService ingredientService;
@@ -46,7 +46,7 @@ public class IngredientController {
     }
 
 
-    @GetMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<IngredientDTO> updateIngredient(@PathVariable Long id, @RequestBody IngredientDTO ingredientDTO) {
         Boolean isUpdate = ingredientService.update(id, ingredientDTO);
         if (isUpdate) {

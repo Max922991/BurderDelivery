@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/order")
 @RequiredArgsConstructor
 public class OrderController {
 
@@ -40,7 +40,7 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<OrderDTO> updateOrderDTO(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
         Boolean isUpdate = orderService.update(id, orderDTO);
         if (isUpdate) {

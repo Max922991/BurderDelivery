@@ -11,4 +11,5 @@
     <include file="db/changelog/scripts/003_DDL_create_table_burger.sql" relativeToChangelogFile="true"/>
     <include file="db/changelog/scripts/004_DDL_create_table_ingredient_type.sql" relativeToChangelogFile="true"/>
     <include file="db/changelog/scripts/005_DDL_create_table_ingredient.sql" relativeToChangelogFile="true"/>
+    <include file="db/changelog/scripts/006_DDl_create_table_person.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

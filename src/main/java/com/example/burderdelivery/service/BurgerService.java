@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 public class BurgerService {
     private final BurgerRepo burgerRepo;
 
+    //CustomerBurgerDTOMapper ?????????
+
     public Burger save(BurgerDTO burgerDTO) {
         return burgerRepo.save(
                 Burger.builder()
@@ -34,7 +36,7 @@ public class BurgerService {
     public BurgerDTO getById(Long id) {
         return burgerRepo.findById(id)
                 .map(burger -> new BurgerDTO(burger.getName(),
-                        burger.getDescription(),
+                        burger.getDescription(),                     //CustomerBurgerDTOMapper ?????????
                         burger.getPrice(),
                         burger.getIsSpicy(),
                         burger.getIngredients()))

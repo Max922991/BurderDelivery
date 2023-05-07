@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/menu")
 @RequiredArgsConstructor
 public class MenuController {
     private final MenuService menuService;
@@ -38,7 +38,7 @@ public class MenuController {
         return ResponseEntity.ok(menu);
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<MenuDTO> updateMenuDTO(@PathVariable Long id, @RequestBody MenuDTO menuDTO) {
         Boolean isUpdate = menuService.update(id, menuDTO);
         if (isUpdate) {

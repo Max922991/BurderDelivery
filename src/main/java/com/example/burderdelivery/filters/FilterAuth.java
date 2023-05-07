@@ -21,11 +21,13 @@ import java.util.Date;
 
 public class FilterAuth extends UsernamePasswordAuthenticationFilter {
 
+    //extends OncePerRequestFilter
+
     public static final String SECRET_KEY = "secret key";
     public static final Long EXPIRATION_TIME = 84_000_000L;
     public static final String PREFIX = "Bearer ";
     public static final String HEADER = "Authorization";
-    public static final String ACCESS = "/users/sign_up";
+    public static final String ACCESS = "/users/sign-up";
 
     private AuthenticationManager authenticationManager;
 

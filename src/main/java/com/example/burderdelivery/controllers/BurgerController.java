@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/burgers")
 @RequiredArgsConstructor
 public class BurgerController {
 
@@ -46,7 +46,7 @@ public class BurgerController {
         return ResponseEntity.ok(burgerDTO);
     }
 
-    @GetMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<BurgerDTO> updateBurger(@PathVariable Long id, @RequestBody BurgerDTO burgerDTO){
         Boolean isUpdate = burgerService.update(id, burgerDTO);
         if (isUpdate) {

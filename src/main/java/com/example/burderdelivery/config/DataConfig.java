@@ -1,6 +1,7 @@
 package com.example.burderdelivery.config;
 
 import javax.persistence.EntityManagerFactory;
+
 import liquibase.integration.spring.SpringLiquibase;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -26,10 +29,10 @@ import javax.sql.DataSource;
 public class DataConfig {
 
     @Bean
-    public DataSource dataSource(@Value("url") String url,
-                                 @Value("username") String username,
-                                 @Value("password") String password,
-                                 @Value("driver-class-name") String driver) {
+    public DataSource dataSource(@Value("${url}") String url,
+                                 @Value("${username}") String username,
+                                 @Value("${password}") String password,
+                                 @Value("${driver-class-name}") String driver) {
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName(driver);
         basicDataSource.setUrl(url);
@@ -43,7 +46,7 @@ public class DataConfig {
 //        return new JdbcTemplate(dataSource);
 //    }
 
-    @Bean
+    @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(DataSource dataSource) {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         jpaVendorAdapter.setShowSql(true);
@@ -67,8 +70,13 @@ public class DataConfig {
     @Bean
     public SpringLiquibase liquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setChangeLog("classpath:liquibase-changelog.xml");
-                liquibase.setDataSource(dataSource);
-                return liquibase;
+        liquibase.setChangeLog("classpath:liquibase-changeLog.xml");
+        liquibase.setDataSource(dataSource);
+        return liquibase;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
     }
 }
