@@ -22,10 +22,21 @@ public class PersonController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<Person> sign(@RequestBody Person person) {
+//        if (person.getPassword().length() < 10) {
+//            throw new IllegalArgumentException("password");
+//        }
+//        if (!isValidUsername(person.getUsername())) {
+//            throw new IllegalArgumentException("symbols");
+//        }
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         ResponseEntity<Person> responseEntity = (ResponseEntity<Person>) ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(personService.savePerson(person));
         return responseEntity;
     }
+
+//    private Boolean isValidUsername(String username) {
+//        String pattern = "^[a-zA-Z0-9_]*$";
+//        return username.matches(pattern);
+//    }
 }

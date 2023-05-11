@@ -16,16 +16,17 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@Configuration
-@PropertySource("classpath:application.properties")
-@EnableJpaRepositories("com.example.burderdelivery.repository")
-@EnableTransactionManagement
+//@Configuration
+//@PropertySource("classpath:application.properties")
+//@EnableJpaRepositories("com.example.burderdelivery.repository")
+//@EnableTransactionManagement
 public class DataConfig {
 
     @Bean
@@ -75,8 +76,8 @@ public class DataConfig {
         return liquibase;
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
+//    @Bean
+//    public BCryptPasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(10);
+//    }
 }
