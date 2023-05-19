@@ -1,6 +1,7 @@
 package com.example.burderdelivery.models;
 
 import javax.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,5 +24,15 @@ public class Order {
     @OneToMany(mappedBy = "order")
     List<Burger> burger;
     LocalDateTime dateTime;
-    Boolean isReady;
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    Payment payment;
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    Person person;
+    @ManyToOne
+    @JoinColumn(name = "status_order_id")
+    StatusOrder statusOrder;
+
+
 }

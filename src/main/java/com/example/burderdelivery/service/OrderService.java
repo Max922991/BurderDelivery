@@ -2,6 +2,7 @@ package com.example.burderdelivery.service;
 
 import com.example.burderdelivery.dto.OrderDTO;
 import com.example.burderdelivery.models.Order;
+import com.example.burderdelivery.models.StatusOrder;
 import com.example.burderdelivery.repository.OrderRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,10 @@ public class OrderService {
                         .address(orderDTO.getAddress())
                         .burger(orderDTO.getBurger())
                         .dateTime(orderDTO.getDateTime())
-                        .isReady(orderDTO.getIsReady())
+                        .statusOrder(StatusOrder.builder()
+                                .name("Жду оплаты")
+                                .description("dwdwdwd")
+                                .build())
                         .build()
         );
     }
@@ -46,19 +50,25 @@ public class OrderService {
                 .map(order -> new OrderDTO(order.getAddress(),
                         order.getBurger(),
                         order.getDateTime(),
-                        order.getIsReady()))
+                        order.setStatusOrder(StatusOrder.builder()
+                                        .name("dwdw")
+                                        .description("dwdwd")
+                                        .build())
                 .collect(Collectors.toList());
     }
 
-    public Boolean update(Long id, OrderDTO orderDTO) {
-        Order order = orderRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Element not found"));
-        order.setAddress(orderDTO.getAddress());
-        order.setBurger(orderDTO.getBurger());
-        order.setDateTime(orderDTO.getDateTime());
-        order.setIsReady(orderDTO.getIsReady());
+    public Boolean update(Order order) {
+        Order orderFound = orderRepo.findById(order.getId()).orElseThrow(() -> new NoSuchElementException("Element not found"));
+        orderFound.setAddress(order.getAddress());
+        orderFound.setBurger(order.getBurger());
+        orderFound.setDateTime(order.getDateTime());
+        order.setStatusOrder(order.getStatusOrder());
         return true;
     }
 
+    public List<Order> findByCardNumber(String cardNumber) {
+        return orderRepo.findByCardNumber(cardNumber);
+    }
 
 
 }

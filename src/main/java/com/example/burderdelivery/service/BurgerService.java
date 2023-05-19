@@ -1,6 +1,7 @@
 package com.example.burderdelivery.service;
 
 import com.example.burderdelivery.dto.BurgerDTO;
+import com.example.burderdelivery.mapper.BurgerMapper;
 import com.example.burderdelivery.models.Burger;
 import com.example.burderdelivery.repository.BurgerRepo;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +15,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BurgerService {
     private final BurgerRepo burgerRepo;
+    private final BurgerMapper burgerMapper;
 
     //CustomerBurgerDTOMapper ?????????
 
-    public Burger save(BurgerDTO burgerDTO) {
-        return burgerRepo.save(
-                Burger.builder()
+    public Burger save(BurgerDTO burgerDTO) { // поменять бургеры местами
+                Burger builder = Burger.builder()
                         .name(burgerDTO.getName())
                         .description(burgerDTO.getDescription())
                         .price(burgerDTO.getPrice())
                         .isSpicy(burgerDTO.getIsSpicy())
                         .ingredients(burgerDTO.getIngredients())
-                        .build()
-        );
+                        .build();
+                burgerRepo.save(builder);
+        burgerMapper.toDTO(builder+);
     }
 
     public void deleteBurger(Long id) {

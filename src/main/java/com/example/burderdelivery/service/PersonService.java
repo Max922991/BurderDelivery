@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PersonService {
     private final PersonRepo personRepo;
+    private final UserEventPublisher userEventPublisher;
 
     public Person savePerson(Person person) {
-       return personRepo.save(person);
+        Person register = personRepo.save(person);
+        userEventPublisher.publishUser(register);
+        return register;
     }
 }

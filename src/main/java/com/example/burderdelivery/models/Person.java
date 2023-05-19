@@ -10,6 +10,8 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -22,9 +24,21 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(name = "user_name")
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$", groups = {Operation.OnCreate.class, Operation.OnUpdate.class})
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", groups =
+            {Operation.OnCreate.class, Operation.OnUpdate.class})
     String username;
 
-    @Size(min = 2, max = 10, groups = {Operation.OnCreate.class, Operation.OnUpdate.class})
+    @Size(min = 2, max = 10, groups =
+            {Operation.OnCreate.class, Operation.OnUpdate.class})
     String password;
+
+    @OneToMany(mappedBy = "person")
+    List<Order> orderList;
+
+    @OneToMany(mappedBy = "person")
+    List<Payment> paymentList;
+
+    @OneToMany(mappedBy = "person")
+    Set<Card> cardSet;
+
 }
