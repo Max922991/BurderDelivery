@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -16,8 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDTO {
 
-    String address;
-    List<Burger> burger; // BurgerDTO ???
-    LocalDateTime dateTime;
-    Boolean isReady;
+    StatusOrderDto statusOrderDto;
+    int numberOrder;
+    Instant createdAt;
+    Double toPay;
+    List<Burger> burgers;
 }

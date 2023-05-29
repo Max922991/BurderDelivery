@@ -1,4 +1,4 @@
-package com.example.burderdelivery.service;
+package com.example.burderdelivery.service.messageSender;
 
 public interface MessageSender {
 

@@ -1,5 +1,7 @@
 package com.example.burderdelivery.controllers;
 
+import com.example.burderdelivery.dto.Response;
+import com.example.burderdelivery.exception.PaymentException;
 import com.example.burderdelivery.models.Person;
 import com.example.burderdelivery.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -39,4 +38,11 @@ public class PersonController {
 //        String pattern = "^[a-zA-Z0-9_]*$";
 //        return username.matches(pattern);
 //    }
+
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<Response> handleException(PaymentException exception) {
+          return ResponseEntity
+                  .status(HttpStatus.PAYMENT_REQUIRED)
+                  .body(new Response(exception.getMessage()));
+    }
 }

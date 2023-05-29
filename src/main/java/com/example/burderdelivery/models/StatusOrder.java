@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,8 @@ public class StatusOrder {
     Long id;
     String name;
     String description;
-    @OneToMany(mappedBy = "statusOrder")
-    List<Order> orderList;
+    @OneToMany
+    @JoinColumn(name = "status_order_id", referencedColumnName = "id")
+    List<Order> orders = new ArrayList<>();
 
 }

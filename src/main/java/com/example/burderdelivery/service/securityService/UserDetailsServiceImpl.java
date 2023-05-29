@@ -1,4 +1,4 @@
-package com.example.burderdelivery.service;
+package com.example.burderdelivery.service.securityService;
 
 import com.example.burderdelivery.models.Person;
 import com.example.burderdelivery.repository.PersonRepo;

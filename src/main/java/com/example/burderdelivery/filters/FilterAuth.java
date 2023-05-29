@@ -29,7 +29,7 @@ public class FilterAuth extends UsernamePasswordAuthenticationFilter {
     public static final String HEADER = "Authorization";
     public static final String ACCESS = "/users/sign-up";
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     public FilterAuth(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -40,7 +40,8 @@ public class FilterAuth extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
             Person person = new ObjectMapper().readValue(request.getInputStream(), Person.class);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(person.getUsername(),
+            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    person.getUsername(),
                     person.getPassword(),
                     new ArrayList<>()));
         } catch (IOException e) {
@@ -52,7 +53,7 @@ public class FilterAuth extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
+                                            Authentication authResult) throws ServletException, IOException {
         String token = JWT.create()
                 .withSubject(((User) authResult.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

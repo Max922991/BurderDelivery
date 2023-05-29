@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,21 +27,24 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(name = "user_name")
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$", groups =
-            {Operation.OnCreate.class, Operation.OnUpdate.class})
+    @NotNull(message = "Username must be not empty")
+    @Size(min = 5, max = 40, message = "Email must be greater than 5 or less than 40",
+            groups = {Operation.OnUpdate.class, Operation.OnCreate.class})
+    @Email(regexp = ".+[@].+[\\.].+", message = "Email must contain only letters and numbers",
+            groups = {Operation.OnUpdate.class, Operation.OnCreate.class})
     String username;
-
-    @Size(min = 2, max = 10, groups =
-            {Operation.OnCreate.class, Operation.OnUpdate.class})
+    @Size(min = 8, max = 50, message = "Password length must be smaller than 50",
+            groups = {Operation.OnCreate.class, Operation.OnUpdate.class, Operation.OnDelete.class})
     String password;
 
-    @OneToMany(mappedBy = "person")
-    List<Order> orderList;
+    @Column(name = "phone_number")
+    String phoneNumber;
+    @OneToMany
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "person")
-    List<Payment> paymentList;
-
-    @OneToMany(mappedBy = "person")
-    Set<Card> cardSet;
+    @OneToMany
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    Set<Card> cardSet = new HashSet<>();
 
 }

@@ -2,7 +2,7 @@ package com.example.burderdelivery.config;
 
 import com.example.burderdelivery.filters.Authorization;
 import com.example.burderdelivery.filters.FilterAuth;
-import com.example.burderdelivery.service.UserDetailsServiceImpl;
+import com.example.burderdelivery.service.securityService.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

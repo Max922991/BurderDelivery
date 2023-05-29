@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,17 +23,19 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(message = "Id must be not null!", groups = {Operation.OnUpdate.class, Operation.OnDelete.class})
     Long id;
+    @Column(name = "name_owner")
     String nameOwner;
+    @Column(name = "card_number")
     String numberOfCard;
-    LocalDateTime dateOfCreated;
+    @Column(name = "expiry_date")
+    LocalDateTime expiryDate;
     String cvcCode;
-    Double balance;
-
+    double balance;
     @ManyToOne
     @JoinColumn(name = "person_id")
     Person person;
-
-    @OneToMany(mappedBy = "card")
-    List<Payment> payment;
+    @OneToMany
+    @JoinColumn(name = "card_id", referencedColumnName = "id")
+    List<Payment> payment = new ArrayList<>();
 
 }

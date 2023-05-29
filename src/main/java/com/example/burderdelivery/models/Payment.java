@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,16 +23,9 @@ public class Payment {
     @NotNull(message = "Id must be not null!", groups = {Operation.OnUpdate.class, Operation.OnDelete.class})
     Long id;
     Double paymentAmount;
-    @OneToMany(mappedBy = "payment")
-    List<Order> orderList;
-    @ManyToOne
-    @JoinColumn(name = "card_id")
-    Card card;
-
-    @ManyToOne
-    @JoinColumn(name = "person_id")
-    Person person;
-
+    @OneToMany
+    @JoinColumn(name = "payment_id", referencedColumnName = "id")
+    List<Order> orders = new ArrayList<>();
 
 
 }

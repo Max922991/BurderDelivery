@@ -1,4 +1,4 @@
-package com.example.burderdelivery.service;
+package com.example.burderdelivery.service.eventService;
 
 import com.example.burderdelivery.event.UserRegisterEvent;
 import com.example.burderdelivery.models.Person;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserEventPublisherImpl implements UserEventPublisher{
+public class UserEventPublisherImpl implements UserEventPublisher {
 
    private final ApplicationEventPublisher applicationEventPublisher;
     @Override

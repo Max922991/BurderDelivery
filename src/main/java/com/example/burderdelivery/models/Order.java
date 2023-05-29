@@ -1,11 +1,11 @@
 package com.example.burderdelivery.models;
 
-import javax.persistence.*;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,19 +20,14 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String address;
-    @OneToMany(mappedBy = "order")
-    List<Burger> burger;
-    LocalDateTime dateTime;
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
-    Payment payment;
-    @ManyToOne
-    @JoinColumn(name = "person_id")
-    Person person;
-    @ManyToOne
-    @JoinColumn(name = "status_order_id")
-    StatusOrder statusOrder;
+    String name;
+    @Column(name = "number_order")
+    int numberOrder;
+    @Column(name = "created_date")
+    Instant createdAt = Instant.now();
+    @OneToMany
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    List<Burger> burgers = new ArrayList<>();
 
 
 }

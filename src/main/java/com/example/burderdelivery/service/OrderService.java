@@ -1,74 +1,111 @@
 package com.example.burderdelivery.service;
 
 import com.example.burderdelivery.dto.OrderDTO;
+import com.example.burderdelivery.dto.StatusOrderDto;
+import com.example.burderdelivery.mapper.OrderMapper;
+import com.example.burderdelivery.mapper.StatusOrderMapper;
+import com.example.burderdelivery.models.Burger;
 import com.example.burderdelivery.models.Order;
+import com.example.burderdelivery.models.Person;
 import com.example.burderdelivery.models.StatusOrder;
 import com.example.burderdelivery.repository.OrderRepo;
+import com.example.burderdelivery.repository.PersonRepo;
+import com.example.burderdelivery.repository.StatusOrderRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepo orderRepo;
+    private final BurgerService burgerService;
+    private final StatusOrderService statusOrderService;
+    private final PersonService personService;
+    private final OrderMapper orderMapper;
+    private final PersonRepo personRepo;
+    private final StatusOrderRepo statusOrderRepo;
+    private final StatusOrderMapper statusOrderMapper;
+    private int counter = 1;
 
+    public OrderDTO createOrder(Long personId, List<Long> burgerId) {
+        List<Burger> burgers = burgerId.stream()
+                .map(burgerService::getById)
+                .toList();
+        double sum = burgers.stream()
+                .mapToDouble(Burger::getPrice)
+                .sum();
 
-    public Order save(OrderDTO orderDTO) {
-        return orderRepo.save(
-                Order.builder()
-                        .address(orderDTO.getAddress())
-                        .burger(orderDTO.getBurger())
-                        .dateTime(orderDTO.getDateTime())
-                        .statusOrder(StatusOrder.builder()
-                                .name("Жду оплаты")
-                                .description("dwdwdwd")
-                                .build())
-                        .build()
-        );
+        Order order = Order.builder()
+                .numberOrder(counter++)
+                .burgers(burgers)
+                .createdAt(Instant.now())
+                .build();
+
+        orderRepo.save(order);
+
+        StatusOrder statusOrder = statusOrderService.getByName("waiting for pay");
+
+        linkOrderToStatusOrder(statusOrder.getId(), order.getId());
+        linkOrderToPerson(order.getId(), personId);
+
+        OrderDTO orderDTO = orderMapper.toOrderDto(order);
+        StatusOrderDto statusOrderDto = statusOrderMapper.toDto(statusOrder);
+
+        orderDTO.setStatusOrderDto(statusOrderDto);
+        orderDTO.setToPay(sum);
+
+        return orderDTO;
+    }
+
+    public void linkOrderToPerson(Long orderId, Long personId) {
+        Order order = getById(orderId);
+        Person person = personService.findById(personId);
+
+        person.getOrders().add(order);
+        orderRepo.save(order);
+    }
+
+    public void linkOrderToStatusOrder(Long orderId, Long statusOrderId) {
+        Order order = getById(orderId);
+        StatusOrder statusOrder = statusOrderService.getById(statusOrderId);
+
+        statusOrder.getOrders().add(order);
+        statusOrderService.save(statusOrder);
     }
 
     public void deleteOrder(Long id) {
         orderRepo.deleteById(id);
     }
 
-    public OrderDTO getById(Long id) {
+    public Order getById(Long id) {
         return orderRepo.findById(id)
-                .map(order -> new OrderDTO(order.getAddress(),
-                        order.getBurger(),
-                        order.getDateTime(),
-                        order.getIsReady()))
-                .orElseThrow(() -> new NoSuchElementException("Element not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Order with id " + id + " not found"));
     }
 
     public List<OrderDTO> getAllOrders() {
-        return orderRepo.findAll().stream()
-                .map(order -> new OrderDTO(order.getAddress(),
-                        order.getBurger(),
-                        order.getDateTime(),
-                        order.setStatusOrder(StatusOrder.builder()
-                                        .name("dwdw")
-                                        .description("dwdwd")
-                                        .build())
-                .collect(Collectors.toList());
+        List<Order> orders = orderRepo.findAll();
+        return orderMapper.toOrderListDto(orders);
     }
 
     public Boolean update(Order order) {
-        Order orderFound = orderRepo.findById(order.getId()).orElseThrow(() -> new NoSuchElementException("Element not found"));
-        orderFound.setAddress(order.getAddress());
-        orderFound.setBurger(order.getBurger());
-        orderFound.setDateTime(order.getDateTime());
-        order.setStatusOrder(order.getStatusOrder());
+        Order orderFound = orderRepo.findById(order.getId())
+                .orElseThrow(() -> new NoSuchElementException("Element not found"));
+        orderFound.setName(order.getName());
+        orderFound.setNumberOrder(order.getNumberOrder());
+        orderFound.setCreatedAt(order.getCreatedAt());
+        order.setBurgers(order.getBurgers());
         return true;
     }
 
-    public List<Order> findByCardNumber(String cardNumber) {
-        return orderRepo.findByCardNumber(cardNumber);
-    }
+//    public List<Order> findByCardNumber(String cardNumber) {
+//        return orderRepo.findByCardNumber(cardNumber);
+//    } TODO нужен ли этот метод?
 
 
 }

@@ -1,4 +1,4 @@
-package com.example.burderdelivery.service;
+package com.example.burderdelivery.service.messageSender;
 
 import com.example.burderdelivery.dto.MessageDTO;
 import lombok.RequiredArgsConstructor;

@@ -7,9 +7,9 @@ import com.example.burderdelivery.repository.BurgerRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,51 +17,32 @@ public class BurgerService {
     private final BurgerRepo burgerRepo;
     private final BurgerMapper burgerMapper;
 
-    //CustomerBurgerDTOMapper ?????????
-
-    public Burger save(BurgerDTO burgerDTO) { // поменять бургеры местами
-                Burger builder = Burger.builder()
-                        .name(burgerDTO.getName())
-                        .description(burgerDTO.getDescription())
-                        .price(burgerDTO.getPrice())
-                        .isSpicy(burgerDTO.getIsSpicy())
-                        .ingredients(burgerDTO.getIngredients())
-                        .build();
-                burgerRepo.save(builder);
-        burgerMapper.toDTO(builder+);
-    }
 
     public void deleteBurger(Long id) {
         burgerRepo.deleteById(id);
     }
 
-    public BurgerDTO getById(Long id) {
+    public Burger getById(Long id) {
         return burgerRepo.findById(id)
-                .map(burger -> new BurgerDTO(burger.getName(),
-                        burger.getDescription(),                     //CustomerBurgerDTOMapper ?????????
-                        burger.getPrice(),
-                        burger.getIsSpicy(),
-                        burger.getIngredients()))
-                .orElseThrow(() -> new NoSuchElementException("Element not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Burger not found!"));
+    }
+
+    public BurgerDTO save(Burger burger) {
+        burgerRepo.save(burger);
+        return burgerMapper.toDto(burger);
     }
 
     public List<BurgerDTO> getAllBurgers() {
-        return burgerRepo.findAll().stream()
-                .map(burger -> new BurgerDTO(burger.getName(),
-                        burger.getDescription(),
-                        burger.getPrice(),
-                        burger.getIsSpicy(),
-                        burger.getIngredients()))
-                .collect(Collectors.toList());
+        List<Burger> burgerList = burgerRepo.findAll();
+        return burgerMapper.toDtoList(burgerList);
     }
-
     public Boolean update(Long id, BurgerDTO burgerDTO) {
-        Burger burger = burgerRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Element not found"));
-        burger.setDescription(burgerDTO.getName());
-        burger.setName(burgerDTO.getDescription());
-        burger.setPrice(burgerDTO.getPrice());
-        burger.setIsSpicy(burgerDTO.getIsSpicy());
-        burger.setIngredients(burgerDTO.getIngredients());
+        Burger burger = burgerRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Element not found"));
+        //TODO нужно ли сохранять burger в БД?
+        // burgerRepo.save(burger);
+        burgerMapper.toBurger(burgerDTO);
         return true;
     }
+
 }
