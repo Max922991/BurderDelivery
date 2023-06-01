@@ -19,7 +19,7 @@ public class PersonController {
     private final PersonService personService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @PostMapping("/sign-up")
+    @PostMapping(value = "/sign-up")
     public ResponseEntity<Person> sign(@RequestBody Person person) {
 //        if (person.getPassword().length() < 10) {
 //            throw new IllegalArgumentException("password");

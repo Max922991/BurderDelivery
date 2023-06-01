@@ -8,6 +8,7 @@ import com.example.burderdelivery.models.Burger;
 import com.example.burderdelivery.models.Order;
 import com.example.burderdelivery.models.Person;
 import com.example.burderdelivery.models.StatusOrder;
+import com.example.burderdelivery.repository.BurgerRepo;
 import com.example.burderdelivery.repository.OrderRepo;
 import com.example.burderdelivery.repository.PersonRepo;
 import com.example.burderdelivery.repository.StatusOrderRepo;
@@ -18,6 +19,8 @@ import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class OrderService {
     private final StatusOrderRepo statusOrderRepo;
     private final StatusOrderMapper statusOrderMapper;
     private int counter = 1;
+    private final BurgerRepo burgerRepo;
 
     public OrderDTO createOrder(Long personId, List<Long> burgerId) {
         List<Burger> burgers = burgerId.stream()
@@ -93,19 +97,26 @@ public class OrderService {
         return orderMapper.toOrderListDto(orders);
     }
 
-    public Boolean update(Order order) {
-        Order orderFound = orderRepo.findById(order.getId())
-                .orElseThrow(() -> new NoSuchElementException("Element not found"));
-        orderFound.setName(order.getName());
-        orderFound.setNumberOrder(order.getNumberOrder());
-        orderFound.setCreatedAt(order.getCreatedAt());
-        order.setBurgers(order.getBurgers());
-        return true;
+    public OrderDTO update(Long orderId, Long burgerId, int numberBurger) {
+        Order order = orderRepo.findById(orderId).orElseThrow(() -> new EntityNotFoundException("dwdw"));
+        Burger burger = burgerRepo.findById(burgerId).orElseThrow(() -> new EntityNotFoundException("dwdw"));
+        List<Burger> burgerList = order.getBurgers();
+        burgerList.stream()
+                .filter(burger1 -> burger1.getId().equals(burgerId))
+                .toList();
+        if (numberBurger < 0) {
+            throw new IllegalArgumentException("dwdw");
+        }
+        if (burgerList.size() == numberBurger) {
+            throw new IllegalArgumentException("wdw");
+        }
+        double sum = burgerList.stream()
+                .mapToDouble(Burger::getPrice)
+                .sum();
+        OrderDTO orderDTO = orderMapper.toOrderDto(order);
+        orderDTO.setToPay(sum);
+
+        orderRepo.save(order);
+        return orderDTO;
     }
-
-//    public List<Order> findByCardNumber(String cardNumber) {
-//        return orderRepo.findByCardNumber(cardNumber);
-//    } TODO нужен ли этот метод?
-
-
 }

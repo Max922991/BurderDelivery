@@ -17,11 +17,6 @@ public class BurgerService {
     private final BurgerRepo burgerRepo;
     private final BurgerMapper burgerMapper;
 
-
-    public void deleteBurger(Long id) {
-        burgerRepo.deleteById(id);
-    }
-
     public Burger getById(Long id) {
         return burgerRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Burger not found!"));
@@ -31,18 +26,4 @@ public class BurgerService {
         burgerRepo.save(burger);
         return burgerMapper.toDto(burger);
     }
-
-    public List<BurgerDTO> getAllBurgers() {
-        List<Burger> burgerList = burgerRepo.findAll();
-        return burgerMapper.toDtoList(burgerList);
-    }
-    public Boolean update(Long id, BurgerDTO burgerDTO) {
-        Burger burger = burgerRepo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Element not found"));
-        //TODO нужно ли сохранять burger в БД?
-        // burgerRepo.save(burger);
-        burgerMapper.toBurger(burgerDTO);
-        return true;
-    }
-
 }

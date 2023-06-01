@@ -22,18 +22,6 @@ public class CardService {
     private final PersonRepo personRepo;
     private final PersonService personService;
 
-    public void update(Card card) {
-        cardRepo.findById(card.getId())
-                .map(card1 -> Card.builder()
-                        .balance(card.getBalance()))
-                .orElseThrow(() -> new UsernameNotFoundException("wdwd"));
-    }
-
-    public Card getCardByNumber(String number) {
-       return cardRepo.findByNumberOfCard(number)
-                .orElseThrow(() -> new UsernameNotFoundException("wdwd"));
-    }
-
     public CardDto create(Long personId ,String nameOwner,
                           String numberOfCard,
                           LocalDateTime expiryDate,
@@ -53,17 +41,11 @@ public class CardService {
 
     public void linkPersonToCard(Long personId, Long cardId) {
         Person person = personService.findById(personId);
-        Card card = findById(cardId);
+        Card card = getById(cardId);
 
         person.getCardSet().add(card);
         cardRepo.save(card);
     }
-
-    public Card findById(Long id) {
-        return cardRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Card not found"));
-    }
-
 
     public Card getById(Long cardId) {
        return cardRepo.findById(cardId)
