@@ -26,6 +26,7 @@ public class PaymentService {
         Order order = orderService.getById(orderId);
         Card card = cardService.getById(cardId);
         StatusOrder statusOrder = statusOrderService.getByName("Order has been pay");
+        // TODO создать enum со статусами оплаты и добавить в scripts
         double moneySubtraction = 0;
 
         LocalDateTime localDateTime = LocalDateTime.now();

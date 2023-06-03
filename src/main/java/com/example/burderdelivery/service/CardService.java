@@ -7,7 +7,6 @@ import com.example.burderdelivery.models.Person;
 import com.example.burderdelivery.repository.CardRepo;
 import com.example.burderdelivery.repository.PersonRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;

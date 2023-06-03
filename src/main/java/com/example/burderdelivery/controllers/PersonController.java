@@ -28,7 +28,7 @@ public class PersonController {
 //            throw new IllegalArgumentException("symbols");
 //        }
         person.setPassword(passwordEncoder.encode(person.getPassword()));
-        ResponseEntity<Person> responseEntity = (ResponseEntity<Person>) ResponseEntity.status(HttpStatus.OK)
+        ResponseEntity<Person> responseEntity = ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(personService.savePerson(person));
         return responseEntity;

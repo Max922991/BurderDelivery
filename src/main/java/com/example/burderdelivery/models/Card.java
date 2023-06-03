@@ -29,6 +29,7 @@ public class Card {
     String numberOfCard;
     @Column(name = "expiry_date")
     LocalDateTime expiryDate;
+    @Column(name = "cvc_code")
     String cvcCode;
     double balance;
     @ManyToOne

@@ -13,18 +13,19 @@ import com.example.burderdelivery.repository.OrderRepo;
 import com.example.burderdelivery.repository.PersonRepo;
 import com.example.burderdelivery.repository.StatusOrderRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+
+
+   private final KafkaTemplate<String, Object> template;
 
     private final OrderRepo orderRepo;
     private final BurgerService burgerService;
@@ -63,6 +64,8 @@ public class OrderService {
 
         orderDTO.setStatusOrderDto(statusOrderDto);
         orderDTO.setToPay(sum);
+
+        template.send("delivery_burger", orderDTO);
 
         return orderDTO;
     }
